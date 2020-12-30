@@ -4,7 +4,13 @@ import Todo from './Todo'
 
 class TodosContainer extends Component {
 
-  renderTodos = () => this.props.todos.map((todo, id) => <Todo key={id} text={todo} />)
+  // renderTodos = () => this.props.todos.map((todo, id) => <Todo delete={this.props.delete} key={id} text={todo} />)
+  renderTodos = () => {
+    return this.props.todos.map(todo => <Todo delete={this.props.delete} key={todo.id} todo={todo} />)
+  }
+  // The change is minimal, but this set up is actually better. Previously, key was based off the index provided by map. Now its using our randomly generated ID, and is less prone to errors in the virtual DOM. We'll need both todo.id and todo.text to be passed into Todo so we pass both down as the object, todo.
+
+
 
   render() {
     return(
@@ -21,4 +27,10 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(TodosContainer);
+const mapDispatchToProps = dispatch => {
+  return {
+    delete: todoText => dispatch({type: 'DELETE_TODO', payload: todoText })
+  }
+}
+ 
+export default connect(mapStateToProps, mapDispatchToProps)(TodosContainer);
